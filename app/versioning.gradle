@@ -1,0 +1,14 @@
+ext.getVersionName = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--tags', '--long'
+            standardOutput = stdout
+        }
+        def info = stdout.toString().trim().split('-')
+        return info[0] + '.' + info[1]
+    }
+    catch (ignored) {
+        return null;
+    }
+}
