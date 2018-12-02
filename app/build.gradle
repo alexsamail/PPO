@@ -6,7 +6,10 @@ apply plugin: 'kotlin-android-extensions'
 
 apply from: 'versioning.gradle'
 
+def codeVersion = getVersionCode()
+
 version = getVersionName()
+
 
 android {
     signingConfigs {
@@ -17,6 +20,7 @@ android {
             storePassword 'sacha0147'
         }
     }
+
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             outputFileName = "${applicationId}-${variant.versionName}.apk"
@@ -24,21 +28,37 @@ android {
     }
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.cx61.ppo"
+        applicationId "com.ppo"
         minSdkVersion 23
         targetSdkVersion 28
         versionName version
-        manifestPlaceholders = [ROTATION: "portrait"]
+        versionCode codeVersion
+        signingConfig signingConfigs.config
     }
+
     buildTypes {
-        release {
-            signingConfig signingConfigs.config
-        }
-        debug {
+        release {}
+        debug {}
+    }
+
+    flavorDimensions "version"
+    productFlavors{
+        demo {
+            dimension "version"
+            applicationId "com.ppo.demo"
             manifestPlaceholders = [ROTATION: "unspecified"]
+            versionCode 30000 + android.defaultConfig.versionCode
             versionNameSuffix = "-dev"
         }
+        full {
+            dimension "version"
+            applicationId "com.ppo.full"
+            versionCode 20000 + android.defaultConfig.versionCode
+            manifestPlaceholders = [ROTATION: "portrait"]
+        }
     }
+
+
 }
 
 dependencies {

@@ -29,15 +29,14 @@ class MainActivity : AppCompatActivity() {
                     .setNegativeButton("Ok") { dialog, _ -> dialog.cancel() }
                     .setOnCancelListener { ActivityCompat.requestPermissions(
                             this, arrayOf(Manifest.permission.READ_PHONE_STATE), PERMISSION_REQUEST_CODE) }
-            val alert = builder.create()
-            alert.show()
+            val attention = builder.create()
+            attention.show()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         IMEI()
         val version: TextView = findViewById(R.id.version)
         version.text = BuildConfig.VERSION_NAME
