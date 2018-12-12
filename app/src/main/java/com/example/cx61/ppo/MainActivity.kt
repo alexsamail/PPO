@@ -1,12 +1,12 @@
 package com.example.cx61.ppo
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
 import android.widget.TextView
 import android.telephony.TelephonyManager
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AlertDialog
 import android.content.pm.PackageManager
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         IMEI()
         val version: TextView = findViewById(R.id.version)
         version.text = BuildConfig.VERSION_NAME
+
+        val versionCode: TextView = findViewById(R.id.code)
+        versionCode.text = BuildConfig.VERSION_CODE.toString()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

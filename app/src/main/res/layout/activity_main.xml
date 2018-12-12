@@ -28,4 +28,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:id="@+id/imei" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Code:" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/code" />
 </LinearLayout>
