@@ -4,12 +4,13 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: "androidx.navigation.safeargs"
+
 apply from: 'versioning.gradle'
 
 def codeVersion = getVersionCode()
 
 def nameVersion = getVersionName()
-
 
 android {
     signingConfigs {
@@ -42,7 +43,7 @@ android {
     }
 
     flavorDimensions "version"
-    productFlavors{
+    productFlavors {
         demo {
             dimension "version"
             applicationId "com.ppo.demo"
@@ -66,7 +67,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
+    implementation 'com.google.android.material:material:1.0.0-alpha1'
+    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha07'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1-beta01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-beta01'
+    def nav_version = "1.0.0-alpha07"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 }
