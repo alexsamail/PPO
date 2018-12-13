@@ -21,11 +21,14 @@
             android:id="@+id/action_startFragment_to_userPage"
             app:destination="@id/userPage" />
         <action
-            android:id="@+id/action_startFragment_to_blank1"
-            app:destination="@id/blank1" />
+            android:id="@+id/action_startFragment_to_emptyPage1"
+            app:destination="@id/emptyPage1" />
         <action
-            android:id="@+id/action_startFragment_to_blank2"
-            app:destination="@id/blank2" />
+            android:id="@+id/action_startFragment_to_emptyPage2"
+            app:destination="@id/emptyPage2" />
+        <action
+            android:id="@+id/action_startFragment_to_rss"
+            app:destination="@id/rss" />
     </fragment>
     <fragment
         android:id="@+id/userPage"
@@ -37,18 +40,23 @@
             app:destination="@id/editUser" />
     </fragment>
     <fragment
-        android:id="@+id/blank1"
-        android:name="com.example.cx61.ppo.Blank1"
-        android:label="fragment_blank1"
-        tools:layout="@layout/fragment_blank1" />
+        android:id="@+id/emptyPage1"
+        android:name="com.example.cx61.ppo.EmptyPage1"
+        android:label="fragment_empty_page1"
+        tools:layout="@layout/fragment_empty_page1" />
     <fragment
-        android:id="@+id/blank2"
-        android:name="com.example.cx61.ppo.Blank2"
+        android:id="@+id/emptyPage2"
+        android:name="com.example.cx61.ppo.EmptyPage2"
         android:label="fragment_blank2"
-        tools:layout="@layout/fragment_blank2" />
+        tools:layout="@layout/fragment_empty_page2" />
     <fragment
         android:id="@+id/editUser"
         android:name="com.example.cx61.ppo.EditUser"
         android:label="fragment_edit_user"
         tools:layout="@layout/fragment_edit_user" />
+    <fragment
+        android:id="@+id/rss"
+        android:name="com.example.cx61.ppo.RSS"
+        android:label="fragment_rss"
+        tools:layout="@layout/fragment_rss" />
 </navigation>
