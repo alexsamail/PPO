@@ -19,11 +19,6 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -52,7 +47,7 @@ class MainActivity : AppCompatActivity(){
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_about -> {
-                findNavController(R.id.nav_host).navigate(R.id.action_startFragment_to_AboutActivity2)
+                findNavController(R.id.nav_host).navigate(R.id.AboutActivity)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
