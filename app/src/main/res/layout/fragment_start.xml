@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".StartFragment">
     <TextView
+        android:id="@+id/startScreenText"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Welcome!" />

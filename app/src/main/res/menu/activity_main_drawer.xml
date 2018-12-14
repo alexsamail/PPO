@@ -3,11 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/userPage"
-            android:icon="@drawable/ic_menu_user"
-            android:title="User" />
+    <group
+        android:id="@+id/menu_group"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/rss"
             android:icon="@drawable/ic_menu_rss"
@@ -21,5 +19,18 @@
             android:icon="@drawable/ic_menu_page"
             android:title="EmptyPage2" />
     </group>
-
+    <group
+        android:id="@+id/login_group">
+        <item
+            android:id="@+id/loginActivity"
+            android:icon="@drawable/ic_menu_user"
+            android:title="Log in" />
+    </group>
+    <group
+        android:id="@+id/logout_group">
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/ic_menu_user"
+            android:title="Log out" />
+    </group>
 </menu>
