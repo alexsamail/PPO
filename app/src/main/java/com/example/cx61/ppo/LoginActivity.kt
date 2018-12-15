@@ -14,6 +14,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
+
+
 class LoginActivity : AppCompatActivity() {
     private val LOGIN_ACTION = 0
     private val REGISTER_ACTION = 1
@@ -64,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         finish()
                     } else {
-                        password.error = it.exception.toString()
+                        password.error = it.exception?.localizedMessage
                         password.requestFocus()
                     }
                 }
@@ -74,7 +76,7 @@ class LoginActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         finish()
                     } else {
-                        password.error = it.exception.toString()
+                        password.error = it.exception?.localizedMessage
                         password.requestFocus()
                     }
                 }

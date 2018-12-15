@@ -26,7 +26,6 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
         val toggle = ActionBarDrawerToggle(
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity(){
             nav_view.menu.setGroupVisible(R.id.login_group, true)
             nav_view.menu.setGroupVisible(R.id.logout_group, false)
             header.isClickable = false
-            header.findViewById<ImageView>(R.id.header_image).setImageResource(R.mipmap.ic_launcher_round)
+            header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
             header.findViewById<TextView>(R.id.header_email).text = "Unauthorized"
         }
         else {
@@ -58,9 +57,9 @@ class MainActivity : AppCompatActivity(){
             nav_view.menu.getItem(4).setOnMenuItemClickListener { FirebaseAuth.getInstance().signOut(); recreate();true }
             header.isClickable = true
             FirebaseStorage.getInstance().getReference().child("avatars/" + user.uid + ".jpg").getBytes(1024*1024*1024).addOnSuccessListener {
-                header.findViewById<ImageView>(R.id.header_image).setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+                header?.findViewById<ImageView>(R.id.header_image)?.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
             }.addOnFailureListener {
-                header.findViewById<ImageView>(R.id.header_image).setImageResource(R.mipmap.ic_launcher_round)
+                header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
             }
             header.findViewById<TextView>(R.id.header_email).text = user.email
         }

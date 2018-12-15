@@ -12,31 +12,34 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import android.graphics.BitmapFactory
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.ScrollView
+import android.widget.TextView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_edit_user.*
-import kotlinx.android.synthetic.main.fragment_user_page.*
+import org.w3c.dom.Text
 
 class UserPage : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = FirebaseAuth.getInstance().currentUser
-        email.setText(user!!.email)
+        view.findViewById<TextView>(R.id.email).setText(user!!.email)
         FirebaseDatabase.getInstance().getReference().child("users").child(user.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val user: User? = dataSnapshot.getValue(User::class.java)
-                first_name.setText(user?.firstName)
-                last_name.setText(user?.lastName)
-                phone.setText(user?.phone)
+                view.findViewById<TextView>(R.id.first_name).setText(user?.firstName)
+                view.findViewById<TextView>(R.id.last_name).setText(user?.lastName)
+                view.findViewById<TextView>(R.id.phone).setText(user?.phone)
             }
             override fun onCancelled(databaseError: DatabaseError) {
             }
         })
-        profile_photo.setImageResource(R.mipmap.ic_launcher_round)
         FirebaseStorage.getInstance().getReference().child("avatars/" + user.uid + ".jpg").getBytes(1024*1024*1024).addOnSuccessListener {
-            profile_photo.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
+            view.findViewById<ImageView>(R.id.profile_photo)?.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
         }
-        edit_button.setOnClickListener { activity!!.findNavController(R.id.nav_host).navigate(R.id.action_userPage_to_editUser) }
+        view.findViewById<FloatingActionButton>(R.id.edit_button).setOnClickListener { activity!!.findNavController(R.id.nav_host).navigate(R.id.action_userPage_to_editUser) }
 
     }
 

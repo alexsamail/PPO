@@ -8,7 +8,7 @@
         android:id="@+id/AboutActivity"
         android:name="com.example.cx61.ppo.AboutActivity"
         android:label="activity_about"
-        tools:layout="@layout/activity_about" />
+        tools:layout="@layout/activity_about" ><deepLink app:uri="//by.ppo/page/2"/></activity>
     <fragment
         android:id="@+id/startFragment"
         android:name="com.example.cx61.ppo.StartFragment"
@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_startFragment_to_rss"
             app:destination="@id/rss" />
+        <action
+            android:id="@+id/action_startFragment_to_loginActivity"
+            app:destination="@id/loginActivity" /><deepLink app:uri="//by.ppo/page/1"/>
     </fragment>
     <fragment
         android:id="@+id/userPage"
@@ -37,30 +40,35 @@
         tools:layout="@layout/fragment_user_page" >
         <action
             android:id="@+id/action_userPage_to_editUser"
-            app:destination="@id/editUser" />
+            app:destination="@id/editUser" /><deepLink app:uri="//by.ppo/page/4"/>
     </fragment>
     <fragment
         android:id="@+id/emptyPage1"
         android:name="com.example.cx61.ppo.EmptyPage1"
         android:label="fragment_empty_page1"
         tools:layout="@layout/fragment_empty_page1" >
-    </fragment>
+    <deepLink app:uri="//by.ppo/page/7"/></fragment>
     <fragment
         android:id="@+id/emptyPage2"
         android:name="com.example.cx61.ppo.EmptyPage2"
         android:label="fragment_blank2"
         tools:layout="@layout/fragment_empty_page2" >
-    </fragment>
+    <deepLink app:uri="//by.ppo/page/8"/></fragment>
     <fragment
         android:id="@+id/editUser"
         android:name="com.example.cx61.ppo.EditUser"
         android:label="fragment_edit_user"
         tools:layout="@layout/fragment_edit_user" >
-    </fragment>
+    <deepLink app:uri="//by.ppo/page/5"/></fragment>
     <fragment
         android:id="@+id/rss"
         android:name="com.example.cx61.ppo.RSS"
         android:label="fragment_rss"
         tools:layout="@layout/fragment_rss" >
-    </fragment>
+    <deepLink app:uri="//by.ppo/page/6"/></fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.example.cx61.ppo.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" ><deepLink app:uri="//by.ppo/page/3"/></activity>
 </navigation>
