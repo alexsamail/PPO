@@ -24,23 +24,23 @@ class UserPage : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val user = FirebaseAuth.getInstance().currentUser
+        val user = BaseController.getCurrentUser()
         view.findViewById<TextView>(R.id.email).setText(user!!.email)
-        FirebaseDatabase.getInstance().getReference().child("users").child(user.uid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val user: User? = dataSnapshot.getValue(User::class.java)
-                view.findViewById<TextView>(R.id.first_name).setText(user?.firstName)
-                view.findViewById<TextView>(R.id.last_name).setText(user?.lastName)
-                view.findViewById<TextView>(R.id.phone).setText(user?.phone)
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        })
-        FirebaseStorage.getInstance().getReference().child("avatars/" + user.uid + ".jpg").getBytes(1024*1024*1024).addOnSuccessListener {
-            view.findViewById<ImageView>(R.id.profile_photo)?.setImageBitmap(BitmapFactory.decodeByteArray(it, 0, it.size))
-        }
-        view.findViewById<FloatingActionButton>(R.id.edit_button).setOnClickListener { activity!!.findNavController(R.id.nav_host).navigate(R.id.action_userPage_to_editUser) }
 
+        val userData = BaseController.getDataUser()
+        view.findViewById<TextView>(R.id.first_name).text = userData?.firstName
+        view.findViewById<TextView>(R.id.last_name).text = userData?.lastName
+        view.findViewById<TextView>(R.id.phone).text = userData?.phone
+        view.findViewById<ImageView>(R.id.profile_photo).setImageResource(R.drawable.harley)
+
+        BaseController.getTaskAvatarOfUser().addOnSuccessListener {
+            view.findViewById<ImageView>(R.id.edit_profile_photo).setImageBitmap(
+                    BaseController.byteArrayToBitmap(it))
+        }
+
+        view.findViewById<FloatingActionButton>(R.id.edit_button).setOnClickListener {
+            activity!!.findNavController(R.id.nav_host).navigate(R.id.action_userPage_to_editUser)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

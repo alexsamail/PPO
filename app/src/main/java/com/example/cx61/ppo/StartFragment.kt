@@ -19,7 +19,7 @@ class StartFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        val user = BaseController.getCurrentUser()
         if (user != null) {
             view!!.findViewById<TextView>(R.id.startScreenText).text = "Hello " + user.email
         }
