@@ -23,7 +23,8 @@
                 android:layout_height="120dp"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:contentDescription="Avatar" />
+                android:contentDescription="Avatar"
+                app:srcCompat="@drawable/harley"/>
 
             <TextView
                 android:layout_width="wrap_content"

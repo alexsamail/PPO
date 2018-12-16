@@ -1,5 +1,6 @@
 package com.example.cx61.ppo
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.graphics.BitmapFactory
 import androidx.core.view.GravityCompat
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.firebase.storage.FirebaseStorage
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(){
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(){
             drawer_layout.closeDrawer(GravityCompat.START)
             findNavController(R.id.nav_host).navigate(R.id.userPage)
         }
+
     }
 
     override fun onResume() {
@@ -55,10 +58,11 @@ class MainActivity : AppCompatActivity(){
                 BaseController.signOut(); recreate();true }
             header.isClickable = true
 
-            nav_view.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
             BaseController.getTaskAvatarOfUser().addOnSuccessListener {
-                nav_view.findViewById<ImageView>(R.id.header_image).setImageBitmap(
+                header.findViewById<ImageView>(R.id.header_image).setImageBitmap(
                         BaseController.byteArrayToBitmap(it))
+            }.addOnFailureListener{
+                header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
             }
 
             header.findViewById<TextView>(R.id.header_email).text = user.email

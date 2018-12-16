@@ -8,10 +8,7 @@ import android.widget.ImageView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
@@ -23,18 +20,8 @@ object BaseController {
         return FirebaseAuth.getInstance().currentUser
     }
 
-    fun getDataUser(): User? {
-        //user.last_name user.first_name user.phone
-        var user: User? = null
-        FirebaseDatabase.getInstance().getReference().child("users").child(getCurrentUser()!!.uid)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                user = dataSnapshot.getValue(User::class.java)
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        })
-        return user
+    fun getTaskDataUser(): DatabaseReference {
+        return FirebaseDatabase.getInstance().getReference().child("users").child(getCurrentUser()!!.uid)
     }
 
     fun getTaskAvatarOfUser(): Task<ByteArray> {
@@ -42,9 +29,9 @@ object BaseController {
                 "avatars/" + getCurrentUser()!!.uid + ".jpg").getBytes(1024*1024*1024)
     }
 
-    fun bitmapToByteArray(photo: Bitmap): ByteArray {
+    fun bitmapToByteArray(photo: Bitmap?): ByteArray {
         val baos = ByteArrayOutputStream()
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        photo?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         return baos.toByteArray()
     }
 
@@ -52,14 +39,14 @@ object BaseController {
         return BitmapFactory.decodeByteArray(array, 0, array.size)
     }
 
-    fun imageViewToByteArray(image: ImageView): ByteArray {
-        val bitmap = (image.drawable as BitmapDrawable).bitmap
+    fun imageViewToByteArray(image: ImageView?): ByteArray {
+        val bitmap = (image?.drawable as BitmapDrawable).bitmap
         val stream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream)
         return stream.toByteArray()
     }
 
-    fun imageViewToBitmap(image: ImageView): Bitmap {
+    fun imageViewToBitmap(image: ImageView?): Bitmap {
         return byteArrayToBitmap(imageViewToByteArray(image))
     }
 
@@ -71,10 +58,10 @@ object BaseController {
                    lastName: String, phone: String, photo: Bitmap){
 
         val user = getCurrentUser()
-        user!!.updateEmail(email)
+        user?.updateEmail(email)
 
         val db = FirebaseDatabase.getInstance().getReference()
-        db.child("users").child(user.uid).setValue(User(email, firstName, lastName, phone))
+        db.child("users").child(user!!.uid).setValue(User(email, firstName, lastName, phone))
 
         val storage = FirebaseStorage.getInstance().getReference()
         storage.child("avatars/" + user.uid + ".jpg").putBytes(bitmapToByteArray(photo))

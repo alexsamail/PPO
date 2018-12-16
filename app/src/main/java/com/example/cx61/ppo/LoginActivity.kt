@@ -17,9 +17,11 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
+
     private val LOGIN_ACTION = 0
     private val REGISTER_ACTION = 1
     private lateinit var mAuth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -35,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
 
         email_sign_up_button.setOnClickListener { attemptAction(REGISTER_ACTION) }
     }
+
     private fun attemptAction(action: Int) {
         email.error = null
         password.error = null
@@ -42,6 +45,11 @@ class LoginActivity : AppCompatActivity() {
         val passwordStr = password.text.toString()
         var cancel = false
         var focusView: View? = null
+        if (TextUtils.isEmpty(passwordStr)) {
+            password.error = getString(R.string.error_not_password)
+            focusView = password
+            cancel = true
+        }
         if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
             password.error = getString(R.string.error_invalid_password)
             focusView = password
@@ -82,12 +90,15 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
     }
+
     private fun isEmailValid(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
+
     private fun isPasswordValid(password: String): Boolean {
         return password.length >= 8
     }
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private fun showProgress(show: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
