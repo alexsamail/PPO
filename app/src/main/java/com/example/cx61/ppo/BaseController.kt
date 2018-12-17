@@ -3,7 +3,6 @@ package com.example.cx61.ppo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.media.Image
 import android.widget.ImageView
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -11,7 +10,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
+import org.w3c.dom.Document
+import org.xml.sax.InputSource
+import java.io.StringReader
+import java.io.StringWriter
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.OutputKeys
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 object BaseController {
 
@@ -22,6 +29,39 @@ object BaseController {
 
     fun getOffline() {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+    }
+
+    fun xmlToString(doc: Document): String{
+        val tf = TransformerFactory.newInstance()
+        val transformer = tf.newTransformer()
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes")
+        val writer = StringWriter()
+        transformer.transform(DOMSource(doc), StreamResult(writer))
+        val output = writer.getBuffer().toString().replace("\n|\r", "")
+        return output
+    }
+
+    fun stringToXML(str: String): Document?{
+        try {
+            val factory = DocumentBuilderFactory.newInstance()
+            val builder = factory.newDocumentBuilder()
+            val d1 = builder.parse(InputSource(StringReader(str)))
+            return d1
+        }
+        catch (ex: Exception){
+            return null
+        }
+    }
+
+    fun saveCache(doc: Document){
+        val user = getCurrentUser()
+        if (user != null)
+            FirebaseDatabase.getInstance().getReference().child("users").child(user.uid).child("rssCache").setValue(xmlToString(doc))
+    }
+    fun saveUrl(str: String){
+        val user = getCurrentUser()
+        if (user != null)
+            FirebaseDatabase.getInstance().getReference().child("users").child(user.uid).child("rssUrl").setValue(str)
     }
 
     fun getTaskDataUser(): DatabaseReference {

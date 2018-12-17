@@ -11,23 +11,26 @@ import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
+import android.net.ConnectivityManager
 
-class NewsAdapter(internal var context: Context, internal var feedItems: ArrayList<FeedItem>) : RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
+class NewsAdapter(internal var context: Context, internal var feedItems: ArrayList<NewsItem>) : RecyclerView.Adapter<NewsAdapter.MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false)
         return MyViewHolder(view)
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-//        YoYo.with(Techniques.FadeIn).playOn(holder.cardView)
         val current = feedItems[position]
         holder.Title.text = current.title
         holder.Description.text = current.description
         holder.Date.text = current.pubDate
         Picasso.with(context).load(current.thumbnailUrl).into(holder.Thumbnail)
         holder.cardView.setOnClickListener {
-            val intent = Intent(context, BrowserActivity::class.java)
-            intent.putExtra("url", current.link)
-            startActivity(context, intent, null)
+            val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (cm.activeNetworkInfo != null && cm.activeNetworkInfo.isConnected) {
+                val intent = Intent(context, BrowserActivity::class.java)
+                intent.putExtra("url", current.link)
+                startActivity(context, intent, null)
+            }
         }
     }
     override fun getItemCount(): Int {

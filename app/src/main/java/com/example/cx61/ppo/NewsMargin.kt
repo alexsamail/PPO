@@ -9,7 +9,7 @@ class NewsMargin(internal var Space: Int) : RecyclerView.ItemDecoration() {
         outRect.left = Space
         outRect.bottom = Space
         outRect.right = Space
-        if (parent.getChildLayoutPosition(view) == 0) {
+        if (parent.getChildLayoutPosition(view) <= 1) {
             outRect.top = Space
         }
     }

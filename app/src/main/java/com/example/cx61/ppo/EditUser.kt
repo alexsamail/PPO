@@ -138,12 +138,12 @@ class EditUser : Fragment() {
         val builder = AlertDialog.Builder(context!!)
         builder.setMessage("Save changes?")
                 .setCancelable(false)
-                .setNegativeButton("Discard") { dialog, _ ->
+                .setNegativeButton("No") { dialog, _ ->
                     run {
                         dialog.cancel()
                     }
                 }
-                .setPositiveButton("Save") { dialog, _ ->
+                .setPositiveButton("Yes") { dialog, _ ->
                     run {
                         BaseController.saveToBase(
                                 email = EMAIL,
