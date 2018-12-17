@@ -12,7 +12,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
 import android.content.pm.PackageManager
-import android.media.Image
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -32,6 +31,7 @@ class EditUser : Fragment() {
     var LAST_NAME: String = ""
     var FIRST_NAME: String = ""
     var PHONE: String = ""
+    var RSS: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -52,17 +52,26 @@ class EditUser : Fragment() {
             view.findViewById<EditText>(R.id.edit_email).setText(user?.email)
 
             var userData: User? = null
-            BaseController.getTaskDataUser().addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    userData = dataSnapshot.getValue(User::class.java)
-                    view.findViewById<EditText>(R.id.edit_first_name).setText(userData?.firstName)
-                    view.findViewById<EditText>(R.id.edit_last_name).setText(userData?.lastName)
-                    view.findViewById<EditText>(R.id.edit_phone).setText(userData?.phone)
-                }
-                override fun onCancelled(databaseError: DatabaseError) {
-                }
-            })
 
+            try {
+                BaseController.getTaskDataUser().addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        userData = dataSnapshot.getValue(User::class.java)
+                        view.findViewById<EditText>(R.id.edit_first_name).setText(userData?.firstName)
+                        view.findViewById<EditText>(R.id.edit_last_name).setText(userData?.lastName)
+                        view.findViewById<EditText>(R.id.edit_phone).setText(userData?.phone)
+                        view.findViewById<EditText>(R.id.edit_rss).setText(userData?.rssUrl)
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                    }
+                })
+            }
+            catch (e: Exception){
+                view.findViewById<EditText>(R.id.edit_first_name).setText("")
+                view.findViewById<EditText>(R.id.edit_last_name).setText("")
+                view.findViewById<EditText>(R.id.edit_phone).setText("")
+                view.findViewById<EditText>(R.id.edit_rss).setText("")
+            }
             view.findViewById<ImageView>(R.id.edit_profile_photo).setImageBitmap(AVATAR)
         }
 
@@ -75,7 +84,8 @@ class EditUser : Fragment() {
                     firstName = view.findViewById<EditText>(R.id.edit_first_name).text.toString(),
                     lastName = view.findViewById<EditText>(R.id.edit_last_name).text.toString(),
                     phone = view.findViewById<EditText>(R.id.edit_phone).text.toString(),
-                    photo = AVATAR!!)
+                    photo = AVATAR!!,
+                    rss = view.findViewById<EditText>(R.id.edit_rss).text.toString())
             activity!!.findViewById<ImageView>(R.id.header_image).setImageBitmap(AVATAR)
             activity!!.findViewById<TextView>(R.id.header_email).text = email
             activity!!.findNavController(R.id.nav_host).navigateUp()
@@ -120,6 +130,7 @@ class EditUser : Fragment() {
         FIRST_NAME = view?.findViewById<EditText>(R.id.edit_first_name)?.text.toString()
         LAST_NAME = view?.findViewById<EditText>(R.id.edit_last_name)?.text.toString()
         PHONE = view?.findViewById<EditText>(R.id.edit_phone)?.text.toString()
+        RSS = view?.findViewById<EditText>(R.id.edit_rss)?.text.toString()
         super.onPause()
     }
 
@@ -139,7 +150,8 @@ class EditUser : Fragment() {
                                 firstName = FIRST_NAME,
                                 lastName = LAST_NAME,
                                 phone = PHONE,
-                                photo = AVATAR!!)
+                                photo = AVATAR!!,
+                                rss = RSS)
                         dialog.cancel()
                     }
                 }
@@ -165,6 +177,7 @@ class EditUser : Fragment() {
         outState.putString("email", view?.findViewById<EditText>(R.id.edit_email)?.text.toString())
         outState.putString("phone", view?.findViewById<EditText>(R.id.edit_phone)?.text.toString())
         outState.putByteArray("avatar", BaseController.bitmapToByteArray(AVATAR))
+        outState.putString("rss", view?.findViewById<EditText>(R.id.edit_rss)?.text.toString())
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -180,6 +193,7 @@ class EditUser : Fragment() {
             view?.findViewById<EditText>(R.id.edit_last_name)?.setText(savedInstanceState.getString("last_name"))
             view?.findViewById<EditText>(R.id.edit_phone)?.setText(savedInstanceState.getString("phone"))
             view?.findViewById<ImageView>(R.id.edit_profile_photo)?.setImageBitmap(AVATAR)
+            view?.findViewById<EditText>(R.id.edit_rss)?.setText(savedInstanceState.getString("rss"))
         }
     }
 }

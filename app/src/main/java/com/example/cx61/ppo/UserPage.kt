@@ -20,19 +20,33 @@ class UserPage : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = BaseController.getCurrentUser()
-        view.findViewById<TextView>(R.id.email).setText(user!!.email)
+        try {
+            view.findViewById<TextView>(R.id.email).setText(user!!.email)
+        }
+        catch (e: Exception) {
+            view.findViewById<TextView>(R.id.email).text = ""
+        }
 
         var userData: User? = null
-        BaseController.getTaskDataUser().addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                userData = dataSnapshot.getValue(User::class.java)
-                view.findViewById<TextView>(R.id.first_name).text = userData?.firstName
-                view.findViewById<TextView>(R.id.last_name).text = userData?.lastName
-                view.findViewById<TextView>(R.id.phone).text = userData?.phone
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-            }
-        })
+        try{
+            BaseController.getTaskDataUser().addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    userData = dataSnapshot.getValue(User::class.java)
+                    view.findViewById<TextView>(R.id.first_name).text = userData?.firstName
+                    view.findViewById<TextView>(R.id.last_name).text = userData?.lastName
+                    view.findViewById<TextView>(R.id.phone).text = userData?.phone
+                    view.findViewById<TextView>(R.id.rss).text = userData?.rssUrl
+                }
+                override fun onCancelled(databaseError: DatabaseError) {
+                }
+            })
+        }
+        catch (e: Exception) {
+            view.findViewById<TextView>(R.id.first_name).text = ""
+            view.findViewById<TextView>(R.id.last_name).text = ""
+            view.findViewById<TextView>(R.id.phone).text = ""
+            view.findViewById<TextView>(R.id.rss).text = ""
+        }
 
 
         val avatar: Bitmap? = BaseController.imageViewToBitmap(activity!!.findViewById<ImageView>(R.id.header_image))

@@ -108,6 +108,20 @@
                 android:hint="your phone"
                 android:maxLines="1"
                 android:singleLine="true"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RSS:"/>
+
+            <EditText
+                android:id="@+id/edit_rss"
+                android:inputType="phone"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="RSS"
+                android:maxLines="1"
+                android:singleLine="true"/>
             <Button
                 android:id="@+id/edit_save"
                 style="?android:textAppearanceSmall"

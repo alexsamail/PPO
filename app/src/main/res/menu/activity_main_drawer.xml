@@ -7,7 +7,7 @@
         android:id="@+id/menu_group"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/rss"
+            android:id="@+id/startFragment"
             android:icon="@drawable/ic_menu_rss"
             android:title="RSS" />
         <item

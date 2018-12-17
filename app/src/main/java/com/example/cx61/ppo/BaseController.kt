@@ -20,6 +20,10 @@ object BaseController {
         return FirebaseAuth.getInstance().currentUser
     }
 
+    fun getOffline() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+    }
+
     fun getTaskDataUser(): DatabaseReference {
         return FirebaseDatabase.getInstance().getReference().child("users").child(getCurrentUser()!!.uid)
     }
@@ -55,13 +59,14 @@ object BaseController {
     }
 
     fun saveToBase(email: String, firstName: String,
-                   lastName: String, phone: String, photo: Bitmap){
+                   lastName: String, phone: String,
+                   photo: Bitmap, rss: String){
 
         val user = getCurrentUser()
         user?.updateEmail(email)
 
         val db = FirebaseDatabase.getInstance().getReference()
-        db.child("users").child(user!!.uid).setValue(User(email, firstName, lastName, phone))
+        db.child("users").child(user!!.uid).setValue(User(email, firstName, lastName, phone, rss))
 
         val storage = FirebaseStorage.getInstance().getReference()
         storage.child("avatars/" + user.uid + ".jpg").putBytes(bitmapToByteArray(photo))

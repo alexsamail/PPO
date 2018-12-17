@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_startFragment_to_loginActivity"
             app:destination="@id/loginActivity" /><deepLink app:uri="//by.ppo/page/1"/>
+        <action
+            android:id="@+id/action_startFragment_to_browserActivity"
+            app:destination="@id/browserActivity" />
     </fragment>
     <fragment
         android:id="@+id/userPage"
@@ -71,4 +74,8 @@
         android:name="com.example.cx61.ppo.LoginActivity"
         android:label="activity_login"
         tools:layout="@layout/activity_login" ><deepLink app:uri="//by.ppo/page/3"/></activity>
+    <activity
+        android:id="@+id/browserActivity"
+        android:name="com.example.cx61.ppo.BrowserActivity"
+        android:label="BrowserActivity" />
 </navigation>
