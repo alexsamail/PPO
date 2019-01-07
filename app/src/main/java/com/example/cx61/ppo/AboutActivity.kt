@@ -8,6 +8,8 @@ import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
 import androidx.appcompat.app.AlertDialog
 import android.content.pm.PackageManager
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_about.*
 
 class AboutActivity : AppCompatActivity() {
 
@@ -39,6 +41,7 @@ class AboutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_about)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+     //   about_toolbar.setNavigationOnClickListener { onBackPressed() }
         supportActionBar?.title = "About"
 
         IMEI()
@@ -47,6 +50,11 @@ class AboutActivity : AppCompatActivity() {
 
         val versionCode: TextView = findViewById(R.id.code)
         versionCode.text = BuildConfig.VERSION_CODE.toString()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

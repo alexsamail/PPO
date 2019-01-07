@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
 import androidx.appcompat.app.AppCompatActivity
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils

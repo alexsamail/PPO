@@ -29,6 +29,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="First Name:"/>
 
             <TextView
@@ -40,6 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Last Name:"/>
 
             <TextView
@@ -51,6 +53,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="E-mail:"/>
 
             <TextView
@@ -62,6 +65,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Phone number:"/>
 
             <TextView
@@ -72,6 +76,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="RSS:"/>
 
             <TextView

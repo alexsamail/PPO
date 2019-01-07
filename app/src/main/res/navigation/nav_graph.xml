@@ -63,12 +63,6 @@
         android:label="fragment_edit_user"
         tools:layout="@layout/fragment_edit_user" >
     <deepLink app:uri="//by.ppo/page/5"/></fragment>
-    <fragment
-        android:id="@+id/rss"
-        android:name="com.example.cx61.ppo.RSS"
-        android:label="fragment_rss"
-        tools:layout="@layout/fragment_rss" >
-    <deepLink app:uri="//by.ppo/page/6"/></fragment>
     <activity
         android:id="@+id/loginActivity"
         android:name="com.example.cx61.ppo.LoginActivity"

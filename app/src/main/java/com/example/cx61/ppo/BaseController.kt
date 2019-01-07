@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import java.io.ByteArrayOutputStream
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
@@ -79,8 +80,8 @@ object BaseController {
         return baos.toByteArray()
     }
 
-    fun byteArrayToBitmap(array: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(array, 0, array.size)
+    fun byteArrayToBitmap(array: ByteArray?): Bitmap {
+        return BitmapFactory.decodeByteArray(array, 0, array!!.size)
     }
 
     fun imageViewToByteArray(image: ImageView?): ByteArray {
@@ -110,5 +111,23 @@ object BaseController {
 
         val storage = FirebaseStorage.getInstance().getReference()
         storage.child("avatars/" + user.uid + ".jpg").putBytes(bitmapToByteArray(photo))
+    }
+
+    fun saveUser(userData: User): Task<Void>? {
+        val user = getCurrentUser()
+        if (user != null)
+            return FirebaseDatabase.getInstance().getReference().child("users").child(user.uid).setValue(userData)
+        return null
+    }
+
+    fun saveAvatar(bitmap: Bitmap?): UploadTask?{
+        val user = getCurrentUser()
+        if (user != null) {
+            val storage = FirebaseStorage.getInstance().getReference()
+            val baos = ByteArrayOutputStream()
+            bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            return storage.child("avatars/" + user.uid + ".jpg").putBytes(baos.toByteArray())
+        }
+        return null
     }
 }

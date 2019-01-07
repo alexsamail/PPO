@@ -18,6 +18,7 @@ class NewsAdapter(internal var context: Context, internal var feedItems: ArrayLi
         val view = LayoutInflater.from(context).inflate(R.layout.news_item, parent, false)
         return MyViewHolder(view)
     }
+
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val current = feedItems[position]
         holder.Title.text = current.title
@@ -33,9 +34,11 @@ class NewsAdapter(internal var context: Context, internal var feedItems: ArrayLi
             }
         }
     }
+
     override fun getItemCount(): Int {
         return feedItems.size
     }
+
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         internal var Title: TextView
         internal var Description: TextView

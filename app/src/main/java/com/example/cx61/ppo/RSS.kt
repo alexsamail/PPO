@@ -1,33 +1,14 @@
-import android.app.ProgressDialog
-import android.content.Context
-import android.content.res.Configuration
-import androidx.recyclerview.widget.RecyclerView
+package com.example.cx61.ppo
+
 import android.os.AsyncTask
-import androidx.recyclerview.widget.GridLayoutManager
-import com.example.cx61.ppo.BaseController
-import com.example.cx61.ppo.NewsAdapter
-import com.example.cx61.ppo.NewsItem
-import com.example.cx61.ppo.NewsMargin
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import org.w3c.dom.Document
 import java.net.HttpURLConnection
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
-class RSSActivity(var context: Context, var recyclerView: RecyclerView, var address: String, var orientation: Int, var data: Document? = null) : AsyncTask<Void, Void, Void>() {
-    internal var progressDialog: ProgressDialog
-    internal lateinit var feedItems: ArrayList<NewsItem>
-    internal lateinit var url: URL
-    init {
-        progressDialog = ProgressDialog(context)
-        progressDialog.setMessage("Loading...")
-    }
-
-    override fun onPreExecute() {
-        progressDialog.show()
-        super.onPreExecute()
-    }
+class RSS(var address: String, var data: Document? = null) : AsyncTask<Void, Void, Void>() {
+    lateinit var feedItems: ArrayList<NewsItem>
+    lateinit var url: URL
 
     override fun doInBackground(vararg params: Void): Void? {
         if (data == null)
@@ -35,21 +16,7 @@ class RSSActivity(var context: Context, var recyclerView: RecyclerView, var addr
         ProcessXml(data)
         return null
     }
-    override fun onPostExecute(aVoid: Void?) {
-        super.onPostExecute(aVoid)
-        progressDialog.dismiss()
-        val adapter = NewsAdapter(context, feedItems)
-        if (orientation == Configuration.ORIENTATION_PORTRAIT)
-            recyclerView.layoutManager = GridLayoutManager(context, 1)
-        else
-            recyclerView.layoutManager = GridLayoutManager(context, 2)
-        recyclerView.addItemDecoration(NewsMargin(20))
-        recyclerView.adapter = adapter
-        val user = FirebaseAuth.getInstance().currentUser
-        if (user != null)
-            BaseController.saveCache(data!!)
 
-    }
     private fun ProcessXml(data: Document?) {
         feedItems = ArrayList()
         if (data != null) {
@@ -72,15 +39,12 @@ class RSSActivity(var context: Context, var recyclerView: RecyclerView, var addr
                         } else if (cureent.getNodeName().equals("link")) {
                             item.link = cureent.getTextContent()
                         } else if (cureent.getNodeName().equals("enclosure")) {
-                            //this will return us thumbnail url
                             val url = cureent.getAttributes().item(0).getTextContent()
                             item.thumbnailUrl = url
                         } else if (cureent.getNodeName().equals("media:thumbnail")) {
-                            //this will return us thumbnail url
                             val url = cureent.getAttributes().item(0).getTextContent()
                             item.thumbnailUrl = url
                         } else if (cureent.getNodeName().equals("image")) {
-                            //this will return us thumbnail url
                             val url = cureent.getAttributes().item(1).getTextContent()
                             item.thumbnailUrl = url
                         }
@@ -107,4 +71,4 @@ class RSSActivity(var context: Context, var recyclerView: RecyclerView, var addr
             return null
         }
     }
-} 
+}

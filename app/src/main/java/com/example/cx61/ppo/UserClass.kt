@@ -7,5 +7,5 @@ data class User(
         var firstName: String? = "",
         var lastName: String? = "",
         var phone: String? = "",
-        var rssUrl: String? = ""
+        var rssUrl: String = ""
 )

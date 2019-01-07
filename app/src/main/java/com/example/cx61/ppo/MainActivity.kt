@@ -1,13 +1,11 @@
 package com.example.cx61.ppo
 
-import android.Manifest
+import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
+import android.media.Image
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -19,12 +17,13 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.google.android.material.navigation.NavigationView
 
-class MainActivity : AppCompatActivity(){
+
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
 
     lateinit var cm: ConnectivityManager
+    var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +33,8 @@ class MainActivity : AppCompatActivity(){
                 this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
-//        BaseController.getOffline()
         NavigationUI.setupWithNavController(nav_view, findNavController(R.id.nav_host))
+        nav_view.setNavigationItemSelectedListener(this)
         nav_view.getHeaderView(0).setOnClickListener {
             drawer_layout.closeDrawer(GravityCompat.START)
             findNavController(R.id.nav_host).navigate(R.id.userPage)
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity(){
                 runOnUiThread {network_icon.setImageResource(R.drawable.ic_network_off)}
             }
         })
-    }
+        }
 
     override fun onResume() {
         super.onResume()
@@ -71,32 +70,72 @@ class MainActivity : AppCompatActivity(){
             header.isClickable = false
             header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
             header.findViewById<TextView>(R.id.header_email).text = "Unauthorized"
-        }
-        else {
+        } else {
+
             nav_view.menu.setGroupVisible(R.id.menu_group, true)
             nav_view.menu.setGroupVisible(R.id.login_group, false)
             nav_view.menu.setGroupVisible(R.id.logout_group, true)
-            nav_view.menu.getItem(4).setOnMenuItemClickListener {
-                BaseController.signOut(); recreate();true }
             header.isClickable = true
 
-            BaseController.getTaskAvatarOfUser().addOnSuccessListener {
-                header.findViewById<ImageView>(R.id.header_image).setImageBitmap(
-                        BaseController.byteArrayToBitmap(it))
-            }.addOnFailureListener{
-                header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
+            val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            if (!(cm.activeNetworkInfo == null || !cm.activeNetworkInfo.isConnected)) {
+                progressDialog = ProgressDialog(this)
+                progressDialog?.setMessage("Loading")
+                progressDialog?.show()
+
+                BaseController.getTaskAvatarOfUser().addOnSuccessListener {
+                    header.findViewById<ImageView>(R.id.header_image).setImageBitmap(
+                            BaseController.byteArrayToBitmap(it))
+                }.addOnFailureListener {
+                    header.findViewById<ImageView>(R.id.header_image).setImageResource(R.drawable.harley)
+                    progressDialog?.dismiss()
+                }.addOnCompleteListener { progressDialog?.dismiss()
+                }.addOnCanceledListener { progressDialog?.dismiss() }
             }
 
+
             header.findViewById<TextView>(R.id.header_email).text = user.email
+
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        progressDialog = null
+
     }
 
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            if (findNavController(R.id.nav_host).getCurrentDestination()?.getId() == R.id.editUser) {
+                askAndNavigateToFragment(R.id.userPage)
+            } else super.onBackPressed()
         }
+    }
+
+    private fun askAndNavigateToFragment(fragmentId: Int){
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setMessage("You're about to loose unsaved changes!")
+                .setCancelable(false)
+                .setNegativeButton("Leave") { dialog, _ ->
+                    run {
+                        if (fragmentId == R.id.logout){
+                            BaseController.signOut()
+                            findNavController(R.id.nav_host).navigate(R.id.startFragment)}
+                        else{
+                        findNavController(R.id.nav_host).navigate(fragmentId)
+                        dialog.cancel()
+                        }
+                    }
+                }.setPositiveButton("Stay"){dialog, _ ->
+                    run {
+                        dialog.cancel()
+                    }
+                }
+        val alert_complite = builder.create()
+        alert_complite.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -107,10 +146,36 @@ class MainActivity : AppCompatActivity(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_about -> {
-                findNavController(R.id.nav_host).navigate(R.id.AboutActivity)
+                if (findNavController(R.id.nav_host).getCurrentDestination()?.getId() == R.id.editUser) {
+                    askAndNavigateToFragment(R.id.AboutActivity)
+                } else findNavController(R.id.nav_host).navigate(R.id.AboutActivity)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.nav_host)
+        item.isChecked = false
+        if (navController.currentDestination?.id == R.id.editUser) {
+            askAndNavigateToFragment(item.itemId)
+            drawer_layout.closeDrawer(GravityCompat.START)
+            return true
+        }
+        if (item.itemId == R.id.logout)
+        {
+            BaseController.signOut()
+            recreate()
+            drawer_layout.closeDrawer(GravityCompat.START)
+            findNavController(R.id.nav_host).navigate(R.id.startFragment)
+            return true
+        }
+        else {
+            item.isChecked = true
+            navController.navigate(item.itemId)
+            drawer_layout.closeDrawer(GravityCompat.START)
+            return true
         }
     }
 }
